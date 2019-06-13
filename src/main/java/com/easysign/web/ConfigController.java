@@ -41,29 +41,26 @@ public class ConfigController {
 	@GetMapping("/get-config/{serviceName}")
 	public @ResponseBody Map listConfig(@PathVariable String serviceName) throws ConfigurationException {
 		config = configuration.getConfiguration(serviceName);
-		log.info("list configuration from service (" + serviceName + ")" + config.toString());
+		log.info("List configuration from service [{}] : {} ", serviceName, config);
 		return config;
 	}
 
 	@PostMapping("/add-config")
 	public @ResponseBody void addConfig(@RequestBody ConfigData conf) {
-		log.info("add configuration to service (" + conf.getServiceName() + ") : " + conf.toString());
+		log.info("Add configuration to service [{}] : {}", conf.getServiceName(), conf);
 		configuration.saveConfig(conf);
-		return;
 	}
 
 	@PostMapping("/update-config")
 	public @ResponseBody void updatingConfig(@RequestBody ConfigData conf) {
-		log.info("update configuration from service (" + conf.getServiceName() + ") with : " + config.toString());
+		log.info("Update configuration from service [{}]  with : {}", conf.getServiceName(), config.toString());
 		configuration.updateConfig(conf);
-		return;
 	}
 
 	@PostMapping("/remove-config")
 	public @ResponseBody void removeConfig(@RequestBody ConfigData conf) {
-		log.info("remove configuration line " + conf.getKey() + " from service (" + conf.getServiceName() + ")");
+		log.info("remove configuration line {} from service [{}]", conf.getKey(), conf.getServiceName());
 		configuration.removeConfig(conf);
-		return;
 	}
 
 }

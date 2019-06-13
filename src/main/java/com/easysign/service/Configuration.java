@@ -38,11 +38,11 @@ public class Configuration {
 
 		try {
 
-			String path = cwd + "/config/" + config.getServiceName() + ".properties";
+			String path = cwd + "/config/" + config.getServiceName() + "-dev.properties";
 
 			Properties prop = new Properties();
 
-			conf = new PropertiesConfiguration(cwd + "/config/" + config.getServiceName() + ".properties");
+			conf = new PropertiesConfiguration(cwd + "/config/" + config.getServiceName() + "-dev.properties");
 			File file = conf.getFile();
 			InputStream in;
 			try {
@@ -78,7 +78,7 @@ public class Configuration {
 		PropertiesConfiguration conf;
 
 		try {
-			conf = new PropertiesConfiguration(cwd + "/config/" + config.getServiceName() + ".properties");
+			conf = new PropertiesConfiguration(cwd + "/config/" + config.getServiceName() + "-dev.properties");
 
 			conf.setProperty(config.getKey(), config.getValue());
 
@@ -99,7 +99,7 @@ public class Configuration {
 		PropertiesConfiguration conf;
 
 		try {
-			conf = new PropertiesConfiguration(cwd + "/config/" + config.getServiceName() + ".properties");
+			conf = new PropertiesConfiguration(cwd + "/config/" + config.getServiceName() + "-dev.properties");
 			conf.clearProperty(config.getKey());
 			// System.out.println("conf removed : " + conf.toString());
 
@@ -116,7 +116,7 @@ public class Configuration {
 
 		HttpEntity requestEntity = new HttpEntity<>(headers);
 
-		ResponseEntity<Map> responseEntity = restTemplate.exchange("http://localhost:8888/" + serviceName + "/default",
+		ResponseEntity<Map> responseEntity = restTemplate.exchange("http://localhost:8888/" + serviceName + "/dev",
 				HttpMethod.GET, requestEntity, Map.class);
 		config.put(serviceName, responseEntity.getBody());
 	}
@@ -128,7 +128,7 @@ public class Configuration {
 
 		config = new HashMap<String, Map>();
 		Map configObj = new HashMap<String, String>();
-		String path = cwd + "/config/" + serviceName + ".properties";
+		String path = cwd + "/config/" + serviceName + "-dev.properties";
 
 		Properties prop = new Properties();
 
