@@ -5,32 +5,23 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Properties;
 
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 import lombok.extern.apachecommons.CommonsLog;
 
 @Service
 @CommonsLog
 public class Configuration {
-	private HttpHeaders headers;
-	private RestTemplate restTemplate = new RestTemplate();
-	private Map<String, Object> config = new HashMap<>();
 
 	public void initHeader() {
-		headers = new HttpHeaders();
+		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
 
 	}
@@ -42,11 +33,10 @@ public class Configuration {
 
 		try {
 
-			String path = cwd + "/config/" + config.getServiceName() + "-dev.properties";
-
 			Properties prop = new Properties();
 
-			conf = new PropertiesConfiguration(cwd + "/config/" + config.getServiceName() + "-dev.properties");
+			conf = new PropertiesConfiguration(
+					cwd + "/config/" + config.getServiceName() + "-" + config.getProfile() + ".properties");
 			File file = conf.getFile();
 			InputStream in;
 			try {
@@ -73,7 +63,8 @@ public class Configuration {
 		PropertiesConfiguration conf;
 
 		try {
-			conf = new PropertiesConfiguration(cwd + "/config/" + config.getServiceName() + "-dev.properties");
+			conf = new PropertiesConfiguration(
+					cwd + "/config/" + config.getServiceName() + "-" + config.getProfile() + ".properties");
 
 			conf.setProperty(config.getKey(), config.getValue());
 
@@ -90,23 +81,14 @@ public class Configuration {
 		PropertiesConfiguration conf;
 
 		try {
-			conf = new PropertiesConfiguration(cwd + "/config/" + config.getServiceName() + "-dev.properties");
+			conf = new PropertiesConfiguration(
+					cwd + "/config/" + config.getServiceName() + "-" + config.getProfile() + ".properties");
 			conf.clearProperty(config.getKey());
 			conf.save();
 
 		} catch (ConfigurationException e) {
 			log.warn(e.getMessage());
 		}
-	}
-
-	public void setConfig(String serviceName) {
-		initHeader();
-
-		HttpEntity requestEntity = new HttpEntity<>(headers);
-
-		ResponseEntity<Map> responseEntity = restTemplate.exchange("http://localhost:8888/" + serviceName + "/dev",
-				HttpMethod.GET, requestEntity, Map.class);
-		config.put(serviceName, responseEntity.getBody());
 	}
 
 	public List<ConfigData> getConfiguration(String serviceName, String profile) throws ConfigurationException {
@@ -132,6 +114,7 @@ public class Configuration {
 		for (Object key : prop.keySet()) {
 			data.setKey(key.toString());
 			data.setValue(prop.getProperty((String) key));
+			data.setServiceName(serviceName);
 			data.setProfile(profile);
 			data.setLabel("default");
 			configObj.add(data);
@@ -139,10 +122,6 @@ public class Configuration {
 
 		return configObj;
 
-	}
-
-	public Map<String, String> getConfig(String serviceName) {
-		return config.get(serviceName);
 	}
 
 }

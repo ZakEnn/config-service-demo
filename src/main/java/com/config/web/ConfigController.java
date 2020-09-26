@@ -1,8 +1,6 @@
 package com.config.web;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.commons.configuration.ConfigurationException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,18 +26,16 @@ public class ConfigController {
 
 	private RestTemplate restTemplate = new RestTemplate();
 
-	private Map config = new HashMap<>();
-
 	public void refreshConfig() {
 
 		restTemplate.postForObject("http://localhost:8888/actuator/bus-refresh/", null, String.class);
 
 	}
 
-	@GetMapping("/get-config/{serviceName}")
+	@GetMapping("/get-config/{serviceName}/profile/{profile}")
 	public @ResponseBody List<ConfigData> listConfig(@PathVariable String serviceName, @PathVariable String profile)
 			throws ConfigurationException {
-		log.info("List configuration from service [{}] : {} ", serviceName, config);
+		log.info("List configuration from service [{}] : {} ", serviceName, profile);
 		return configuration.getConfiguration(serviceName, profile);
 	}
 
@@ -51,13 +47,14 @@ public class ConfigController {
 
 	@PostMapping("/update-config")
 	public @ResponseBody void updatingConfig(@RequestBody ConfigData conf) {
-		log.info("Update configuration from service [{}]  with : {}", conf.getServiceName(), config.toString());
+		log.info("Update configuration from service [{}]  with : {}", conf.getServiceName(), conf);
 		configuration.updateConfig(conf);
 	}
 
 	@PostMapping("/remove-config")
 	public @ResponseBody void removeConfig(@RequestBody ConfigData conf) {
-		log.info("remove configuration line {} from service [{}]", conf.getKey(), conf.getServiceName());
+		log.info("remove configuration line {} from service [{}] with profile {}", conf.getKey(), conf.getServiceName(),
+				conf.getProfile());
 		configuration.removeConfig(conf);
 	}
 
