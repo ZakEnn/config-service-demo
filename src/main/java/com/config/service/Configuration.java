@@ -1,10 +1,12 @@
-package com.easysign.service;
+package com.config.service;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
@@ -18,12 +20,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import lombok.extern.apachecommons.CommonsLog;
+
 @Service
+@CommonsLog
 public class Configuration {
 	private HttpHeaders headers;
 	private RestTemplate restTemplate = new RestTemplate();
-	private Map config = new HashMap<String, Map>();
-	private Map discoveryConfig = new HashMap<>();
+	private Map<String, Object> config = new HashMap<>();
 
 	public void initHeader() {
 		headers = new HttpHeaders();
@@ -50,23 +54,15 @@ public class Configuration {
 				prop.load(in);
 
 			} catch (IOException e) {
-				e.printStackTrace();
+				log.warn(e.getMessage());
 			}
-
-			// for (Object key : prop.keySet()) {
-			// System.out.println(key.toString() + ":" + prop.getProperty((String) key));
-			// }
-			//
-			// System.out.println("Configuration path :" + path + "\n conf file name : " +
-			// file.getName());
 
 			conf.addProperty(config.getKey(), config.getValue());
 
 			conf.save();
 
 		} catch (ConfigurationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.warn(e.getMessage());
 		}
 
 	}
@@ -74,7 +70,6 @@ public class Configuration {
 	public void updateConfig(ConfigData config) {
 
 		String cwd = new File("").getAbsolutePath();
-		// System.out.println("path test :" + cwd);
 		PropertiesConfiguration conf;
 
 		try {
@@ -82,32 +77,25 @@ public class Configuration {
 
 			conf.setProperty(config.getKey(), config.getValue());
 
-			// System.out.println("conf updated : " + conf.toString());
-
 			conf.save();
 
 		} catch (ConfigurationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.warn(e.getMessage());
 		}
 
 	}
 
 	public void removeConfig(ConfigData config) {
 		String cwd = new File("").getAbsolutePath();
-		// System.out.println("path test :" + cwd);
 		PropertiesConfiguration conf;
 
 		try {
 			conf = new PropertiesConfiguration(cwd + "/config/" + config.getServiceName() + "-dev.properties");
 			conf.clearProperty(config.getKey());
-			// System.out.println("conf removed : " + conf.toString());
-
 			conf.save();
 
 		} catch (ConfigurationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.warn(e.getMessage());
 		}
 	}
 
@@ -121,18 +109,14 @@ public class Configuration {
 		config.put(serviceName, responseEntity.getBody());
 	}
 
-	public Map getConfiguration(String serviceName) throws ConfigurationException {
+	public List<ConfigData> getConfiguration(String serviceName, String profile) throws ConfigurationException {
 		String cwd = new File("").getAbsolutePath();
-		// System.out.println("path test :" + cwd);
 		PropertiesConfiguration conf;
 
-		config = new HashMap<String, Map>();
-		Map configObj = new HashMap<String, String>();
-		String path = cwd + "/config/" + serviceName + "-dev.properties";
+		List<ConfigData> configObj = new ArrayList<>();
+		String path = cwd + "/config/" + serviceName + "-" + profile + ".properties";
 
 		Properties prop = new Properties();
-
-		// System.out.println("path : " + path);
 		conf = new PropertiesConfiguration(path);
 		File file = conf.getFile();
 		InputStream in;
@@ -141,24 +125,24 @@ public class Configuration {
 			prop.load(in);
 
 		} catch (IOException e) {
-			e.printStackTrace();
+			log.warn(e.getMessage());
 		}
 
+		ConfigData data = new ConfigData();
 		for (Object key : prop.keySet()) {
-			// System.out.println(key.toString() + ":" + prop.getProperty((String) key));
-			configObj.put(key.toString(), prop.getProperty((String) key));
+			data.setKey(key.toString());
+			data.setValue(prop.getProperty((String) key));
+			data.setProfile(profile);
+			data.setLabel("default");
+			configObj.add(data);
 		}
 
-		// System.out.println("configObj : " + configObj.toString());
-		// System.out.println("\n path :" + path + "\n conf file name : " +
-		// file.getName());
 		return configObj;
 
 	}
 
-	public Map getConfig(String serviceName) {
-		// System.out.println("config: " + config);
-		return (Map) config.get(serviceName);
+	public Map<String, String> getConfig(String serviceName) {
+		return config.get(serviceName);
 	}
 
 }

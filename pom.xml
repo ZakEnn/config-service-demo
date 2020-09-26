@@ -8,11 +8,11 @@
 		<version>2.1.4.RELEASE</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.easysign</groupId>
+	<groupId>com.config</groupId>
 	<artifactId>conf-service</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>conf-service</name>
-	<description>Demo project for Spring Boot</description>
+	<description>Dump Spring Boot App</description>
 
 	<properties>
 		<java.version>1.8</java.version>
@@ -25,11 +25,6 @@
 			<artifactId>spring-cloud-config-server</artifactId>
 		</dependency>
  		
-			<!-- https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-netflix-eureka-client -->
-		<dependency>
-		    <groupId>org.springframework.cloud</groupId>
-		    <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
-		</dependency>
 			
 		<dependency>
 		    <groupId>org.springframework.cloud</groupId>
@@ -45,8 +40,14 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <optional>true</optional>
-        </dependency>
-        
+        </dependency>	
+
+		<dependency>
+			<groupId>commons-configuration</groupId>
+			<artifactId>commons-configuration</artifactId>
+			<version>1.10</version>
+		</dependency>        
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>

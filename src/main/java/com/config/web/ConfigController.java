@@ -1,11 +1,11 @@
-package com.easysign.web;
+package com.config.web;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.configuration.ConfigurationException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,16 +14,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
-import com.easysign.service.ConfigData;
-import com.easysign.service.Configuration;
+import com.config.service.ConfigData;
+import com.config.service.Configuration;
 
 import lombok.extern.log4j.Log4j2;
 
 @RestController
 @Log4j2
 public class ConfigController {
-
-	private HttpHeaders headers;
 
 	@Autowired
 	private Configuration configuration;
@@ -39,10 +37,10 @@ public class ConfigController {
 	}
 
 	@GetMapping("/get-config/{serviceName}")
-	public @ResponseBody Map listConfig(@PathVariable String serviceName) throws ConfigurationException {
-		config = configuration.getConfiguration(serviceName);
+	public @ResponseBody List<ConfigData> listConfig(@PathVariable String serviceName, @PathVariable String profile)
+			throws ConfigurationException {
 		log.info("List configuration from service [{}] : {} ", serviceName, config);
-		return config;
+		return configuration.getConfiguration(serviceName, profile);
 	}
 
 	@PostMapping("/add-config")
