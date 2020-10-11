@@ -6,22 +6,30 @@ import java.util.Properties;
 import org.apache.commons.configuration.ConfigurationConverter;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import com.config.entities.ConfigData;
 import com.config.exception.NotFoundException;
-import com.config.rest.dto.ConfigDto;
+import com.config.repository.PropertiesRepository;
 
 import lombok.extern.apachecommons.CommonsLog;
 
 @Service
 @CommonsLog
 public class ConfigService {
-	@Value("${spring.cloud.config.server.native.searchLocations}")
+	@Value("${spring.cloud.config.server.native.searchLocations:config/}")
 	private String configPath;
 
+	@Autowired
+	private PropertiesRepository propertiesRepository;
+
 	public void convertPropsToQuery(String app, String profile, String label) {
+		String localPath = configPath + app + "-" + profile + ".properties";
+		log.info("local path = " + localPath);
 		try {
+
 			PropertiesConfiguration configuration = new PropertiesConfiguration(
 					configPath + app + "-" + profile + ".properties");
 
@@ -32,7 +40,7 @@ public class ConfigService {
 
 				String key = enums.nextElement();
 				String value = properties.getProperty(key);
-				System.out.println(key + " : " + value);
+				log.info(key + " : " + value);
 
 				insertQuery(app, profile, label, key, value);
 
@@ -45,17 +53,16 @@ public class ConfigService {
 	}
 
 	private void insertQuery(String app, String profile, String label, String key, String value) {
-		ConfigDto configDto = new ConfigDto();
-		configDto.setApplication(app);
-		configDto.setKey(key);
-		configDto.setLabel(label);
-		configDto.setProfile(profile);
-		configDto.setValue(value);
-		// if (!propertiesRepository.findByApplicationAndProfileAndKey(app, profile,
-		// key).isPresent()) {
-		// log.info("KEY NOT EXIST " + key);
-		// propertiesRepository.save(properties);
-		// }
+		ConfigData configData = new ConfigData();
+		configData.setApplication(app);
+		configData.setKey(key);
+		configData.setLabel(label);
+		configData.setProfile(profile);
+		configData.setValue(value);
+		if (!propertiesRepository.findByApplicationAndProfileAndKey(app, profile, key).isPresent()) {
+			log.info("KEY NOT EXIST " + key);
+			propertiesRepository.save(configData);
+		}
 
 	}
 
