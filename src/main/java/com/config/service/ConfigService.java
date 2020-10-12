@@ -8,6 +8,7 @@ import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import com.config.entities.ConfigData;
@@ -24,6 +25,9 @@ public class ConfigService {
 
 	@Autowired
 	private PropertiesRepository propertiesRepository;
+
+	@Autowired
+	private RedisTemplate<String, String> redisTemplate;
 
 	public void convertPropsToQuery(String app, String profile, String label) {
 		String localPath = configPath + app + "-" + profile + ".properties";
@@ -63,7 +67,8 @@ public class ConfigService {
 			log.info("KEY NOT EXIST " + key);
 			propertiesRepository.save(configData);
 		}
-
+		// add props
+		redisTemplate.opsForSet().add("test", "test");
 	}
 
 }
