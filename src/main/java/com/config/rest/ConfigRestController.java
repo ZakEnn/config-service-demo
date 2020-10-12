@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.config.service.ConfigService;
@@ -14,10 +15,10 @@ public class ConfigRestController {
 	@Autowired
 	ConfigService configService;
 
-	@GetMapping(value = "/properties/convertProps/{app}/{profile}/{label}")
+	@GetMapping(value = "/properties/convertProps/{app}/{profile}")
 	public ResponseEntity<Object> convertProps(@PathVariable String app, @PathVariable String profile,
-			@PathVariable String label) {
-		configService.convertPropsToQuery(app, profile, label);
+			@RequestParam(required = false) String type) {
+		configService.convertPropsToQuery(app, profile, type);
 		return ResponseEntity.status(HttpStatus.OK).build();
 	}
 }
