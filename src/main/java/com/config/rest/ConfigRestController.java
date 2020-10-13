@@ -18,7 +18,7 @@ public class ConfigRestController {
 	@GetMapping(value = "/properties/convertProps/{app}/{profile}")
 	public ResponseEntity<Object> convertProps(@PathVariable String app, @PathVariable String profile,
 			@RequestParam(required = false) String type) {
-		configService.convertPropsToQuery(app, profile, type);
+		configService.loadPropsToDB(app, profile, type);
 		return ResponseEntity.status(HttpStatus.OK).build();
 	}
 }
