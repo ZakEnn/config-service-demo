@@ -25,16 +25,16 @@ public class ConfigService {
 	private RedisTemplate<String, String> redisTemplate;
 
 	public void convertPropsToQuery(String app, String profile, String type) {
-		String localPath = getLocalPath(app, profile, type);
+		String localConfigPath = getLocalPath(app, profile, type);
 
-		log.info("local path = " + localPath);
+		log.info("local config path = " + localConfigPath);
 		try {
-			PropertiesConfiguration configuration = new PropertiesConfiguration(localPath);
+			PropertiesConfiguration configuration = new PropertiesConfiguration(localConfigPath);
 			Properties properties = ConfigurationConverter.getProperties(configuration);
-			Enumeration<String> enums = (Enumeration<String>) properties.propertyNames();
+			Enumeration<?> enums = properties.propertyNames();
 
 			while (enums.hasMoreElements()) {
-				String key = enums.nextElement();
+				String key = String.valueOf(enums.nextElement());
 				String value = properties.getProperty(key);
 				log.info(key + " : " + value);
 
@@ -49,12 +49,10 @@ public class ConfigService {
 
 	private String getLocalPath(String app, String profile, String type) {
 		String localPath = configPath + app + "-" + profile;
-		if (type.equalsIgnoreCase("yml") || type.equalsIgnoreCase("yaml")) {
-			localPath = localPath.concat(".yml");
-		} else if (type.equalsIgnoreCase("properties")) {
-			localPath = localPath.concat(".properties");
+		if ("yml".equalsIgnoreCase(type) || "yaml".equalsIgnoreCase(type)) {
+			return localPath.concat(".yml");
 		}
-		return localPath;
+		return localPath.concat(".properties");
 	}
 
 	private void insertRedisQuery(String app, String profile, String key, String value) {
