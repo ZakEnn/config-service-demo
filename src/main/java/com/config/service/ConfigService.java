@@ -39,8 +39,6 @@ public class ConfigService {
 
 	private Properties getProperties(String localConfigPath) {
 		try {
-			// if (localConfigPath.endsWith("yml") || localConfigPath.endsWith("yaml"))
-			// return loadYamlIntoProperties(localConfigPath);
 			PropertiesConfiguration configuration = new PropertiesConfiguration(localConfigPath);
 			return ConfigurationConverter.getProperties(configuration);
 
@@ -60,20 +58,4 @@ public class ConfigService {
 		return localPath.concat(".properties");
 	}
 
-	// private Properties loadYamlIntoProperties(String localPath) throws
-	// FileNotFoundException {
-	// try {
-	// File file = new File(localPath);
-	//
-	// YamlPropertiesFactoryBean factory = new YamlPropertiesFactoryBean();
-	// factory.setResources(resource.getResource());
-	// factory.afterPropertiesSet();
-	// return factory.getObject();
-	// } catch (IllegalStateException e) {
-	// Throwable cause = e.getCause();
-	// if (cause instanceof FileNotFoundException)
-	// throw (FileNotFoundException) e.getCause();
-	// throw e;
-	// }
-	// }
 }
