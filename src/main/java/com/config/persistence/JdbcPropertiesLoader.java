@@ -13,8 +13,8 @@ public class JdbcPropertiesLoader implements PropertiesLoader {
 
 	@Override
 	public void insertQuery(String serviceName, String profile, String key, String value) {
-		jdbcTemplate.update("insert into properties (application, profile, key, value) values(?,?,?,?)", serviceName,
-				profile, key, value);
+		jdbcTemplate.update("INSERT INTO properties (application, profile, propkey, value, label) VALUES (?,?,?,?,?)",
+				serviceName, profile, key, value, "latest");
 	}
 
 }
