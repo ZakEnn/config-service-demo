@@ -4,12 +4,14 @@ services:
   redis:
     image: redis
     restart: always
+    container_name: redis-conf
     ports:
       - "6379:6379"
   
   mysql:
     image : mysql:5.7
-    container_name: mysql
+    restart: always
+    container_name: mysql-conf
     ports:
       - "3306:3306"
     command: --init-file /data/application/init.sql
