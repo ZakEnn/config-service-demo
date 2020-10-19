@@ -26,6 +26,12 @@
 		</dependency>
 		
 		<dependency>
+	        <groupId>org.springframework.cloud</groupId>   
+	        <artifactId>spring-cloud-config-server-mongodb</artifactId>   
+	        <version>0.0.3.BUILD-SNAPSHOT</version>
+     	</dependency>
+		
+		<dependency>
 			<groupId>commons-configuration</groupId>
 			<artifactId>commons-configuration</artifactId>
 			<version>1.10</version>
@@ -43,6 +49,17 @@
 		</dependency>
 		
 		<dependency>
+		    <groupId>redis.clients</groupId>
+		    <artifactId>jedis</artifactId>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-mongodb</artifactId>
+		</dependency>
+		
+		
+		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jdbc</artifactId>
 		</dependency>
@@ -54,11 +71,6 @@
 		</dependency>
 		
 		<dependency>
-		    <groupId>redis.clients</groupId>
-		    <artifactId>jedis</artifactId>
-		</dependency>
-		
-		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
@@ -66,6 +78,25 @@
 
 	</dependencies>
 
+	<repositories>
+	    <repository>
+	        <id>spring-snapshots</id>
+	        <name>Spring Snapshots</name>
+	        <url>https://repo.spring.io/libs-snapshot-local</url>
+	        <snapshots>
+	            <enabled>true</enabled>
+	        </snapshots>
+	    </repository>
+	    <repository>
+	        <id>ojo-snapshots</id>
+	        <name>OJO Snapshots</name>
+	        <url>https://oss.jfrog.org/artifactory/libs-snapshot</url>
+	        <snapshots>
+	            <enabled>true</enabled>
+	        </snapshots>
+	    </repository>
+	</repositories>
+	
 	<dependencyManagement>
 		<dependencies>
 			<dependency>

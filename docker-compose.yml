@@ -8,6 +8,15 @@ services:
     ports:
       - "6379:6379"
   
+  mongodb:
+    image: mongo:latest
+    container_name: mongo-conf
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: root
+    ports:
+      - 27017:27017
+  
   mysql:
     image : mysql:5.7
     restart: always
