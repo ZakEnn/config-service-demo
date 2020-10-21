@@ -5,7 +5,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.config.server.mongodb.EnableMongoConfigServer;
 
 @SpringBootApplication
-// @EnableConfigServer
 @EnableMongoConfigServer
 public class ConfServiceApplication {
 
