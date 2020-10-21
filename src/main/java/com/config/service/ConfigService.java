@@ -27,7 +27,7 @@ public class ConfigService {
 	private String configPath;
 
 	@Autowired
-	private PropertiesLoader mongoPropertiesLoader;
+	private PropertiesLoader jdbcPropertiesLoader;
 
 	public void loadPropsToDB(String app, String profile, String type) {
 		String localConfigPath = getLocalPath(app, profile, type);
@@ -51,7 +51,7 @@ public class ConfigService {
 			String value = properties.getProperty(key);
 			log.info(key + " : " + value);
 
-			mongoPropertiesLoader.insertQuery(app, profile, key, value);
+			jdbcPropertiesLoader.insertQuery(app, profile, key, value);
 		});
 	}
 
