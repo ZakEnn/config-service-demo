@@ -12,4 +12,4 @@ After that go to the desired branch and run the app using maven command:
 # microservices properties setup:
 If you already has a couple of microservices configurations (.yml or.properties) on your local environment and you want to load them in a specific DB:
 - go to /resources/application.properties and change the "config.native.location" variable. 
-- send a GET request to http://localhost:8888/properties/load-to-db/{service-name}/profile/{service-profile}
+- send a GET request to http://localhost:8888/properties/load-to-db/{service-name}/profile/{service-profile}?type=(properties or yaml)
