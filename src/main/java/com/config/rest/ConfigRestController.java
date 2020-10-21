@@ -15,10 +15,10 @@ public class ConfigRestController {
 	@Autowired
 	ConfigService configService;
 
-	@GetMapping(value = "/properties/convertProps/{app}/{profile}")
-	public ResponseEntity<Object> convertProps(@PathVariable String app, @PathVariable String profile,
+	@GetMapping(value = "/properties/load-to-db/{application}/profile/{profile}")
+	public ResponseEntity<Object> convertProps(@PathVariable String application, @PathVariable String profile,
 			@RequestParam(required = false) String type) {
-		configService.loadPropsToDB(app, profile, type);
+		configService.loadPropsToDB(application, profile, type);
 		return ResponseEntity.status(HttpStatus.OK).build();
 	}
 }
